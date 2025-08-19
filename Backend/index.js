@@ -11,30 +11,48 @@ dotenv.config();
 const port = process.env.PORT || 4000;
 const app = express();
 
-// ✅ Fix: Allow all localhost origins (5173, 5174, 5175, etc.)
+// ✅ CORS: allow deployed frontend + any localhost port
 app.use(
   cors({
-    origin: [/http:\/\/localhost:\d+$/], // regex to allow any localhost port
+    origin: (origin, callback) => {
+      const allowedOrigins = [
+        "https://educrafted-lqly.onrender.com",
+      ];
+      // allow any localhost port
+      if (origin?.startsWith("http://localhost:")) {
+        return callback(null, true);
+      }
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   })
 );
 
-// middleware
+// ✅ Middleware
 app.use(cookieParser());
 app.use(express.json());
 
-// routes
+// ✅ Routes
 app.use("/api/auth", authRouter);
 app.use("/api/forms", formRouter);
 
-// test route
+// ✅ Test route
 app.get("/", (req, res) => {
   res.send("Hello from Server");
 });
 
-// start server
-app.listen(port, () => {
-  console.log(`✅ Server started on port ${port}`);
-  connectDB();
-});
+// ✅ Start server + connect to DB
+connectDB()
+  .then(() => {
+    app.listen(port, () =>
+      console.log(`✅ Server started on port ${port}`)
+    );
+  })
+  .catch((err) => {
+    console.error("❌ Failed to connect DB:", err);
+  });
+
 
