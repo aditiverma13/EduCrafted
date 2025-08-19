@@ -1,12 +1,11 @@
-import { Link, NavLink, Route, Routes } from "react-router-dom";
+
+import { NavLink, Route, Routes } from "react-router-dom";
 import FormList from "./pages/FormList";
 import FormBuilder from "./pages/FormBuilder";
 import Preview from "./pages/Preview";
 import Analytics from "./pages/Analytics";
 import PublicForm from "./pages/PublicForm";
 import Navbar from "./components/Navbar";
-
-
 
 export default function App() {
   return (
@@ -22,12 +21,17 @@ export default function App() {
           {/* Public form route (shareable) */}
           <Route path="/f/:id" element={<PublicForm />} />
           {/* Fallback */}
-          <Route path="*" element={
-            <div className="card">
-              <h1 className="text-xl font-semibold mb-2">Not found</h1>
-              <NavLink className="btn btn-primary" to="/">Go Home</NavLink>
-            </div>
-          }/>
+          <Route
+            path="*"
+            element={
+              <div className="card">
+                <h1 className="text-xl font-semibold mb-2">Not found</h1>
+                <NavLink className="btn btn-primary" to="/">
+                  Go Home
+                </NavLink>
+              </div>
+            }
+          />
         </Routes>
       </div>
     </div>
